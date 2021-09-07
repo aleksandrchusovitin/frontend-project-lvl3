@@ -1,7 +1,6 @@
 {
   "name": "@hexlet/code",
   "version": "1.0.0",
-  "type": "module",
   "description": "Rss aggregator",
   "main": "index.js",
   "scripts": {
