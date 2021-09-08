@@ -12,4 +12,4 @@
 
 ## Vercel ##
 
-[Site on Vercel](https://chusovitin-rss-aggregator.vercel.app/)
+[Site on Vercel](https://frontend-project-lvl3-beige-five.vercel.app/)
