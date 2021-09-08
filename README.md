@@ -9,3 +9,7 @@
 ## Eslint status ##
 
 [![Node CI](https://github.com/aleksandrchusovitin/frontend-project-lvl3/actions/workflows/nodejs.yml/badge.svg)](https://github.com/aleksandrchusovitin/frontend-project-lvl3/actions/workflows/nodejs.yml)
+
+## Vercel ##
+
+[Site on Vercel](https://chusovitin-rss-aggregator.vercel.app/)
