@@ -10,8 +10,8 @@ export default () => {
     rssForm: document.querySelector('.rss-form'),
     urlInput: document.querySelector('input[aria-label="url"]'),
     rssBtn: document.querySelector('button[aria-label="add"]'),
+    feedbackEl: document.querySelector('p.feedback'),
   };
-  // const feedbackEl = document.querySelector('p.feedback');
 
   const state = {
     feeds: [],
