@@ -1,19 +1,20 @@
-// @ts-check
-
 import * as yup from 'yup';
-import onChange from 'on-change';
+import getWatchedState from './view.js';
 
 export default () => {
   const schema = yup.object().shape({
     url: yup.string().url(),
   });
 
-  const rssForm = document.querySelector('.rss-form');
-  const urlInput = rssForm.querySelector('input[aria-label="url"]');
-  const rssBtn = rssForm.querySelector('button[aria-label="add"]');
-  const feedbackEl = document.querySelector('p.feedback');
+  const elements = {
+    rssForm: document.querySelector('.rss-form'),
+    urlInput: document.querySelector('input[aria-label="url"]'),
+    rssBtn: document.querySelector('button[aria-label="add"]'),
+  };
+  // const feedbackEl = document.querySelector('p.feedback');
 
   const state = {
+    feeds: [],
     rssForm: {
       valid: true,
       processState: 'filling',
@@ -25,33 +26,9 @@ export default () => {
     },
   };
 
-  const watchedState = onChange(state, (path, currentValue) => {
-    if (path === 'rssForm.valid') {
-      if (!currentValue) {
-        urlInput.classList.add('is-invalid');
-        urlInput.classList.remove('is-valid');
-      } else {
-        urlInput.classList.remove('is-invalid');
-      }
-    }
+  const watchedState = getWatchedState(state, elements);
 
-    if (path === 'rssForm.processState') {
-      if (currentValue === 'send') {
-        rssBtn.disabled = true;
-      }
-      if (currentValue === 'filling') {
-        rssForm.reset();
-        rssBtn.disabled = false;
-        urlInput.focus();
-      }
-    }
-
-    if (path === 'rssForm.errors') {
-      feedbackEl.textContent = currentValue.join(',');
-    }
-  });
-
-  rssForm.addEventListener('submit', (e) => {
+  elements.rssForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const value = formData.get('url');
@@ -60,9 +37,16 @@ export default () => {
     schema
       .validate(state.rssForm.fields)
       .then(() => {
-        watchedState.rssForm.processError = null;
-        watchedState.rssForm.errors = [];
-        watchedState.rssForm.valid = true;
+        if (state.feeds.includes(value)) {
+          watchedState.rssForm.valid = false;
+          watchedState.rssForm.processError = 'Dublicate feed';
+          watchedState.rssForm.errors = ['Dublicate feed'];
+        } else {
+          watchedState.feeds.push(value);
+          watchedState.rssForm.valid = true;
+          watchedState.rssForm.processError = null;
+          watchedState.rssForm.errors = [];
+        }
       })
       .catch((error) => {
         watchedState.rssForm.processError = error.name;
