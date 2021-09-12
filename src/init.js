@@ -8,6 +8,10 @@ export default () => {
     url: yup.string().url(),
   });
 
+  const rssForm = document.querySelector('.rss-form');
+  const urlInput = rssForm.querySelector('input[aria-label="url"]');
+  // const rssBtn = rssForm.querySelector('button[aria-label="add"]');
+
   const state = {
     rssForm: {
       valid: true,
@@ -20,28 +24,38 @@ export default () => {
     },
   };
 
-  const rssForm = document.querySelector('.rss-form');
-  const urlInput = rssForm.querySelector('input[aria-label="url"]');
-  const rssBtn = rssForm.querySelector('button[aria-label="add"]');
-
-  urlInput.addEventListener('input', (e) => {
-    const { value } = e.target;
-    state.rssForm.fields.url = value;
-    schema
-      .isValid(state.rssForm.fields)
-      .then((isValidValue) => {
-        state.rssForm.valid = isValidValue;
-      })
-      .catch((error) => {
-        state.rssForm.processState = error.name;
-        state.rssForm.errors = [...state.rssForm.errors, ...error.errors];
-      });
+  const watchedState = onChange(state, (path, currentValue) => {
+    console.log(state);
+    if (path === 'rssForm.valid') {
+      if (!currentValue) {
+        urlInput.classList.add('is-invalid');
+        urlInput.classList.remove('is-valid');
+      } else {
+        urlInput.classList.add('is-valid');
+        urlInput.classList.remove('is-invalid');
+      }
+    }
   });
 
-  const watchedState = onChange(state, (path, currentValue, prevValue) => {
-    console.log(path);
-    if (path === 'rssForm.valid') {
-      console.log('!!!');
-    }
+  rssForm.addEventListener('submit', (e) => {
+    console.log('!!!!!');
+    e.preventDevault();
+    const formData = new FormData(e.target);
+    const value = formData.get('url');
+    console.log(value);
+    // watchedState.rssForm.fields.url = value;
+    schema
+      .validate(state.rssForm.fields)
+      .catch((error) => {
+        if (error) {
+          watchedState.rssForm.processError = error.name;
+          watchedState.rssForm.errors = [...error.errors];
+          watchedState.rssForm.valid = false;
+        } else {
+          watchedState.rssForm.processError = null;
+          watchedState.rssForm.errors = [];
+          watchedState.rssForm.valid = true;
+        }
+      });
   });
 };
