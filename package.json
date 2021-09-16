@@ -48,8 +48,10 @@
     "webpack-dev-server": "^3.11.2"
   },
   "dependencies": {
+    "axios": "^0.21.4",
     "bootstrap": "^5.1.1",
     "i18next": "^20.6.1",
+    "lodash": "^4.17.21",
     "on-change": "^4.0.0",
     "yup": "^0.32.9"
   }

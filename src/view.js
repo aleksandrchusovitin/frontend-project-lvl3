@@ -1,6 +1,7 @@
 import onChange from 'on-change';
+import parser from './parser.js';
 
-export default (state, elements) => onChange(state, (path, currentValue) => {
+export default (state, elements, i18nInstance) => onChange(state, (path, currentValue) => {
   const {
     urlInput,
     rssBtn,
@@ -11,8 +12,14 @@ export default (state, elements) => onChange(state, (path, currentValue) => {
   if (path === 'rssForm.valid') {
     if (!currentValue) {
       urlInput.classList.add('is-invalid');
+      feedbackEl.classList.add('text-danger');
+      feedbackEl.classList.remove('text-success');
     } else {
       urlInput.classList.remove('is-invalid');
+      feedbackEl.classList.add('text-success');
+      feedbackEl.classList.remove('text-danger');
+      feedbackEl.textContent = i18nInstance.t('validation.success'); // ?
+      parser(state);
     }
   }
   if (path === 'rssForm.processState') {
@@ -26,7 +33,8 @@ export default (state, elements) => onChange(state, (path, currentValue) => {
     }
   }
 
-  if (path === 'rssForm.errors') {
-    feedbackEl.textContent = currentValue.join(',');
+  if (path === 'errors.ValidationError') {
+    const [validationError] = currentValue;
+    feedbackEl.textContent = validationError;
   }
 });
