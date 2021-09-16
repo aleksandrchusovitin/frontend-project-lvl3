@@ -12,4 +12,4 @@
 
 ## Vercel ##
 
-[Site on Vercel](https://frontend-project-lvl3-2hghx2by5-aleksandrchusovitin.vercel.app/)
+[Site on Vercel](https://frontend-project-lvl3-aleksandrchusovitin.vercel.app/)
