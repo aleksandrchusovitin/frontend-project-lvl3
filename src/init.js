@@ -2,6 +2,7 @@ import * as yup from 'yup';
 import i18n from 'i18next';
 import resources from './locales/index.js';
 import getWatchedState from './view.js';
+import parser from './parser.js';
 
 export default () => {
   const elements = {
@@ -9,6 +10,8 @@ export default () => {
     urlInput: document.querySelector('input[aria-label="url"]'),
     rssBtn: document.querySelector('button[aria-label="add"]'),
     feedbackEl: document.querySelector('p.feedback'),
+    feedsContainer: document.querySelector('.feeds'),
+    postsContainer: document.querySelector('.posts'),
   };
 
   const state = {
@@ -47,19 +50,21 @@ export default () => {
       elements.rssForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
-        const value = formData.get('url');
-        watchedState.rssForm.fields.url = value;
+        const currentUrl = formData.get('url');
+        watchedState.rssForm.fields.url = currentUrl;
         watchedState.rssForm.processState = 'send';
         schema
           .validate(state.rssForm.fields)
           .then(() => {
-            const isDublicateFeed = state.feeds.find(({ url }) => url === value);
+            const isDublicateFeed = state.feeds.find(({ url }) => url === currentUrl);
             if (isDublicateFeed) {
               watchedState.rssForm.valid = false;
               watchedState.errors.ValidationError = [i18nInstance.t('validation.errors.dublicateUrl')];
             } else {
               watchedState.rssForm.valid = true;
               watchedState.errors.ValidationError = [];
+
+              parser(currentUrl, watchedState);
             }
           })
           .catch((error) => {

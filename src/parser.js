@@ -1,8 +1,7 @@
 import axios from 'axios';
 import _ from 'lodash';
 
-export default (state) => {
-  const { url } = state.rssForm.fields;
+export default (url, watchedState) => {
   axios.get(`https://hexlet-allorigins.herokuapp.com/get?disableCache=true&url=${url}`)
     .then((data) => {
       const content = data.data.contents;
@@ -19,10 +18,24 @@ export default (state) => {
         description: feedDescription,
         url,
       };
+      watchedState.feeds.push(feed);
 
-      state.feeds.push(feed);
-      console.log(state);
-      console.log(doc);
+      const items = doc.querySelectorAll('item');
+      const posts = Array.from(items).map((item) => {
+        const itemId = _.uniqueId();
+        const itemName = item.querySelector('title').textContent;
+        const itemLink = item.querySelector('link').nextSibling.textContent;
+        const itemDescription = item.querySelector('description').textContent;
+
+        return {
+          id: itemId,
+          feedId,
+          name: itemName,
+          description: itemDescription,
+          link: itemLink,
+        };
+      });
+      watchedState.posts.push(...posts);
     })
-    .catch(console.log);
+    .catch(console.log); // Что делаем с этой ошибкой?
 };

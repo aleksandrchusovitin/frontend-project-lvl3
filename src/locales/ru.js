@@ -3,6 +3,13 @@ export default {
     languages: {
       ru: 'Русский',
     },
+    buttons: {
+      viewing: 'Просмотр',
+    },
+    titles: {
+      feeds: 'Фиды',
+      posts: 'Посты',
+    },
     validation: {
       errors: {
         incorrectUrl: 'Ссылка должна быть валидным URL',
