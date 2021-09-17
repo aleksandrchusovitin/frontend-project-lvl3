@@ -19,7 +19,6 @@ export default (state, elements, i18nInstance) => onChange(state, (path, current
       urlInput.classList.remove('is-invalid');
       feedbackEl.classList.add('text-success');
       feedbackEl.classList.remove('text-danger');
-      // feedbackEl.textContent = i18nInstance.t('validation.success'); // И здесь тоже!
     }
   }
   if (path === 'rssForm.processState') {
@@ -35,12 +34,15 @@ export default (state, elements, i18nInstance) => onChange(state, (path, current
 
   if (path === 'errors.ValidationError') {
     if (currentValue.length === 0) {
-      console.log(i18nInstance.t('validation.success'));
-      console.log(feedbackEl);
-      feedbackEl.textContent = i18nInstance.t('validation.success'); // Почему не добавляется текст?
+      feedbackEl.textContent = i18nInstance.t('validation.success');
+    } else {
+      const [validationError] = currentValue;
+      feedbackEl.textContent = validationError;
     }
-    const [validationError] = currentValue;
-    feedbackEl.textContent = validationError;
+  }
+
+  if (path === 'errors.NetworkError') {
+    feedbackEl.textContent = i18nInstance.t('network.errors.connectionError');
   }
 
   if (path === 'feeds') {

@@ -17,5 +17,10 @@ export default {
       },
       success: 'RSS успешно загружен',
     },
+    network: {
+      errors: {
+        connectionError: 'Ошибка сети',
+      },
+    },
   },
 };

@@ -2,7 +2,7 @@ import * as yup from 'yup';
 import i18n from 'i18next';
 import resources from './locales/index.js';
 import getWatchedState from './view.js';
-import parser from './parser.js';
+import parser from './getRequest.js';
 
 export default () => {
   const elements = {
