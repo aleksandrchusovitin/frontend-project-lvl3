@@ -2,6 +2,7 @@ import axios from 'axios';
 import parser from './parser.js';
 
 export default (url, watchedState) => {
+  const newWatchedState = watchedState; // Понимаю, что это очень плохо :)
   axios.get(`https://hexlet-allorigins.herokuapp.com/get?disableCache=true&url=${url}`)
     .then((data) => {
       const { feed, posts } = parser(url, data);
@@ -9,7 +10,7 @@ export default (url, watchedState) => {
       watchedState.posts.push(...posts);
     })
     .catch((error) => {
-      watchedState.rssForm.valid = false;
-      watchedState.errors.NetworkError = [error]; // Как с этим быть?!
+      newWatchedState.rssForm.valid = false;
+      newWatchedState.errors.NetworkError = [error]; 
     });
 };
