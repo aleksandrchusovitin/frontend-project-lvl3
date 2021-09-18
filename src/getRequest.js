@@ -11,6 +11,6 @@ export default (url, watchedState) => {
     })
     .catch((error) => {
       newWatchedState.rssForm.valid = false;
-      newWatchedState.errors.NetworkError = [error]; 
+      newWatchedState.errors.NetworkError = [error];
     });
 };
