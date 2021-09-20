@@ -64,7 +64,7 @@ export default () => {
               watchedState.rssForm.valid = true;
               watchedState.errors.ValidationError = [];
 
-              parser(currentUrl, watchedState);
+              parser(currentUrl, watchedState, state);
             }
           })
           .catch((error) => {
