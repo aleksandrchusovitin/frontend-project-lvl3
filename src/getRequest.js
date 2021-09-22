@@ -23,6 +23,7 @@ export default (url, watchedState, state) => {
         newWatchedState.feeds.push(...newFeedsWithId);
         newWatchedState.posts.postsList.push(...newPostsWithId);
         newWatchedState.rssForm.processState = 'success';
+        newWatchedState.rssForm.valid = true;
       })
       .catch((error) => {
         console.log(error);
