@@ -98,5 +98,14 @@ export default () => {
           watchedState.modal.modalState = 'closed';
         }
       });
+
+      document.body.addEventListener('click', (e) => {
+        const { target } = e;
+        const modal = target.getAttribute('aria-modal');
+        if (modal) {
+          watchedState.modal.modalPostId = null;
+          watchedState.modal.modalState = 'closed';
+        }
+      });
     });
 };
