@@ -11,12 +11,14 @@ export default (url, watchedState, state) => {
     axios.get(`https://hexlet-allorigins.herokuapp.com/get?disableCache=true&url=${url}`)
       .then((data) => {
         const { feed, posts } = parser(url, data);
-
+        const feedId = _.uniqueId();
         const newFeeds = getNewItems([feed], state.feeds, 'url');
         const newPosts = getNewItems(posts, state.posts, 'link');
 
-        const newFeedsWithId = newFeeds.map((newFeed) => ({ ...newFeed, id: _.uniqueId() }));
-        const newPostsWithId = newPosts.map((newPost) => ({ ...newPost, id: _.uniqueId() }));
+        const newFeedsWithId = newFeeds
+          .map((newFeed) => ({ ...newFeed, id: feedId }));
+        const newPostsWithId = newPosts
+          .map((newPost) => ({ ...newPost, id: _.uniqueId(), feedId }));
 
         newWatchedState.feeds.push(...newFeedsWithId);
         newWatchedState.posts.push(...newPostsWithId);
