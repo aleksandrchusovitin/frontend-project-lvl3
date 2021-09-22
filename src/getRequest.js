@@ -22,8 +22,10 @@ export default (url, watchedState, state) => {
 
         newWatchedState.feeds.push(...newFeedsWithId);
         newWatchedState.posts.postsList.push(...newPostsWithId);
+        newWatchedState.rssForm.processState = 'success';
       })
       .catch((error) => {
+        console.log(error);
         newWatchedState.rssForm.valid = false;
         newWatchedState.errors.NetworkError = [error];
       });

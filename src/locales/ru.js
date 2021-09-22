@@ -15,12 +15,13 @@ export default {
         incorrectUrl: 'Ссылка должна быть валидным URL',
         dublicateUrl: 'RSS уже существует',
       },
-      success: 'RSS успешно загружен',
     },
     network: {
       errors: {
         connectionError: 'Ошибка сети',
+        validRss: 'Ресурс не содержит валидный RSS',
       },
+      success: 'RSS успешно загружен',
     },
   },
 };

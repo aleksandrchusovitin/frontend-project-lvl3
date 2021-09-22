@@ -32,15 +32,14 @@ export default (state, elements, i18nInstance) => onChange(state, (path, current
       rssBtn.disabled = false;
       urlInput.focus();
     }
+    if (currentValue === 'success') {
+      feedbackEl.textContent = i18nInstance.t('network.success');
+    }
   }
 
   if (path === 'errors.ValidationError') {
-    if (currentValue.length === 0) {
-      feedbackEl.textContent = i18nInstance.t('validation.success');
-    } else {
-      const [validationError] = currentValue;
-      feedbackEl.textContent = validationError;
-    }
+    const [validationError] = currentValue;
+    feedbackEl.textContent = validationError;
   }
 
   if (path === 'errors.NetworkError') {
