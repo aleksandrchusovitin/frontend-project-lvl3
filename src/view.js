@@ -1,6 +1,8 @@
 import onChange from 'on-change';
-import renderFeeds from './renderFeeds.js';
-import renderPosts from './renderPosts.js';
+import renderFeeds from './renders/renderFeeds.js';
+import renderPosts from './renders/renderPosts.js';
+import renderModal from './renders/renderModal.js';
+import renderClosingModal from './renders/renderClosingModal.js';
 
 export default (state, elements, i18nInstance) => onChange(state, (path, currentValue) => {
   const {
@@ -51,5 +53,14 @@ export default (state, elements, i18nInstance) => onChange(state, (path, current
 
   if (path === 'posts') {
     renderPosts(state, elements, i18nInstance);
+  }
+
+  if (path === 'modal.modalState') {
+    if (currentValue === 'opened') {
+      renderModal(state, elements);
+    }
+    if (currentValue === 'closed') {
+      renderClosingModal(elements);
+    }
   }
 });

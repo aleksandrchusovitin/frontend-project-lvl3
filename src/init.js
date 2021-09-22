@@ -12,9 +12,14 @@ export default () => {
     feedbackEl: document.querySelector('p.feedback'),
     feedsContainer: document.querySelector('.feeds'),
     postsContainer: document.querySelector('.posts'),
+    modalContainer: document.querySelector('.modal'),
   };
 
   const state = {
+    modal: {
+      modalState: 'closed',
+      modalPostId: null,
+    },
     feeds: [],
     posts: [],
     errors: {},
@@ -50,7 +55,7 @@ export default () => {
       elements.rssForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
-        const currentUrl = formData.get('url');
+        const currentUrl = formData.get('url').trim();
         watchedState.rssForm.fields.url = currentUrl;
         watchedState.rssForm.processState = 'send';
         schema
@@ -72,6 +77,26 @@ export default () => {
             watchedState.rssForm.valid = false;
           });
         watchedState.rssForm.processState = 'filling';
+      });
+
+      elements.postsContainer.addEventListener('click', (e) => {
+        const { target } = e;
+        const btnId = target.dataset.id;
+        if (btnId) {
+          e.preventDefault();
+          watchedState.modal.modalPostId = btnId;
+          watchedState.modal.modalState = 'opened';
+        }
+      });
+
+      elements.modalContainer.addEventListener('click', (e) => {
+        const { target } = e;
+        const btnClosed = target.dataset.bsDismiss;
+        if (btnClosed && btnClosed === 'modal') {
+          e.preventDefault();
+          watchedState.modal.modalPostId = null;
+          watchedState.modal.modalState = 'closed';
+        }
       });
     });
 };

@@ -1,5 +1,6 @@
 export default (state, elements, i18nInstance) => {
   const { postsContainer } = elements;
+
   postsContainer.innerHTML = '';
 
   const card = document.createElement('div');
@@ -36,6 +37,7 @@ export default (state, elements, i18nInstance) => {
     btn.setAttribute('data-bs-toggle', 'modal');
     btn.setAttribute('data-bs-target', '#modal');
     btn.textContent = i18nInstance.t('buttons.viewing');
+
     li.append(btn);
 
     return li;
