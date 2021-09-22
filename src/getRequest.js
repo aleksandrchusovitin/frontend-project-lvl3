@@ -13,7 +13,7 @@ export default (url, watchedState, state) => {
         const { feed, posts } = parser(url, data);
         const feedId = _.uniqueId();
         const newFeeds = getNewItems([feed], state.feeds, 'url');
-        const newPosts = getNewItems(posts, state.posts, 'link');
+        const newPosts = getNewItems(posts, state.posts.postsList, 'link');
 
         const newFeedsWithId = newFeeds
           .map((newFeed) => ({ ...newFeed, id: feedId }));
@@ -21,7 +21,7 @@ export default (url, watchedState, state) => {
           .map((newPost) => ({ ...newPost, id: _.uniqueId(), feedId }));
 
         newWatchedState.feeds.push(...newFeedsWithId);
-        newWatchedState.posts.push(...newPostsWithId);
+        newWatchedState.posts.postsList.push(...newPostsWithId);
       })
       .catch((error) => {
         newWatchedState.rssForm.valid = false;

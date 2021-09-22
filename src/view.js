@@ -51,7 +51,7 @@ export default (state, elements, i18nInstance) => onChange(state, (path, current
     renderFeeds(state, elements, i18nInstance);
   }
 
-  if (path === 'posts') {
+  if (path === 'posts.postsList' || path === 'posts.postsReadList') {
     renderPosts(state, elements, i18nInstance);
   }
 

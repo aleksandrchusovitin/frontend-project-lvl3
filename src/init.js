@@ -21,7 +21,10 @@ export default () => {
       modalPostId: null,
     },
     feeds: [],
-    posts: [],
+    posts: {
+      postsList: [],
+      postsReadList: new Set(),
+    },
     errors: {},
     rssForm: {
       valid: null,
@@ -86,6 +89,8 @@ export default () => {
           e.preventDefault();
           watchedState.modal.modalPostId = btnId;
           watchedState.modal.modalState = 'opened';
+          watchedState.posts.postsReadList.add(btnId);
+          console.log(state);
         }
       });
 

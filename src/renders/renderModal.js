@@ -16,7 +16,7 @@ export default (state, elements) => {
 
   modalTitle.innerHTML = '';
   modalBody.innerHTML = '';
-  const currentPost = state.posts.find(({ id }) => id === state.modal.modalPostId);
+  const currentPost = state.posts.postsList.find(({ id }) => id === state.modal.modalPostId);
   modalTitle.textContent = currentPost.name;
   modalBody.textContent = currentPost.description;
   modalMoreBtn.setAttribute('href', currentPost.link);

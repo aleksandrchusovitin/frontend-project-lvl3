@@ -13,7 +13,7 @@ export default (elements) => {
 
   body.classList.remove('modal-open');
   body.style.removeProperty('overflow');
-  body.style.removeProperty('paddingRight');
+  body.style.removeProperty('padding-right');
 
   modalTitle.innerHTML = '';
   modalBody.innerHTML = '';

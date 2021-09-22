@@ -17,12 +17,18 @@ export default (state, elements, i18nInstance) => {
 
   const ul = document.createElement('ul');
   ul.classList.add('list-group', 'border-0', 'rounded-0');
-  const { posts } = state;
-  const liElements = posts.map(({ name, link, id }) => {
+  const { postsList } = state.posts;
+  const liElements = postsList.map(({ name, link, id }) => {
     const li = document.createElement('li');
     li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
     const itemLink = document.createElement('a');
-    itemLink.classList.add('fw-bold');
+
+    if (state.posts.postsReadList.has(id)) {
+      itemLink.classList.add('fw-normal', 'link-secondary');
+    } else {
+      itemLink.classList.add('fw-bold');
+    }
+
     itemLink.setAttribute('href', link);
     itemLink.setAttribute('data-id', id);
     itemLink.setAttribute('target', '_blank');
