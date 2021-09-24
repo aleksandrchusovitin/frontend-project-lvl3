@@ -86,7 +86,7 @@ export default () => {
         const { target } = e;
         const btnId = target.dataset.id;
         if (btnId) {
-          // e.preventDefault();
+          e.preventDefault();
           watchedState.modal.modalPostId = btnId;
           watchedState.modal.modalState = 'opened';
           watchedState.posts.postsReadList.add(btnId);
@@ -94,23 +94,23 @@ export default () => {
         }
       });
 
-      // elements.modalContainer.addEventListener('click', (e) => {
-      //   const { target } = e;
-      //   const btnClosed = target.dataset.bsDismiss;
-      //   if (btnClosed && btnClosed === 'modal') {
-      //     e.preventDefault();
-      //     watchedState.modal.modalPostId = null;
-      //     watchedState.modal.modalState = 'closed';
-      //   }
-      // });
+      elements.modalContainer.addEventListener('click', (e) => {
+        const { target } = e;
+        const btnClosed = target.dataset.bsDismiss;
+        if (btnClosed && btnClosed === 'modal') {
+          e.preventDefault();
+          watchedState.modal.modalPostId = null;
+          watchedState.modal.modalState = 'closed';
+        }
+      });
 
-      // document.body.addEventListener('click', (e) => {
-      //   const { target } = e;
-      //   const modal = target.getAttribute('aria-modal');
-      //   if (modal) {
-      //     watchedState.modal.modalPostId = null;
-      //     watchedState.modal.modalState = 'closed';
-      //   }
-      // });
+      document.body.addEventListener('click', (e) => {
+        const { target } = e;
+        const modal = target.getAttribute('aria-modal');
+        if (modal) {
+          watchedState.modal.modalPostId = null;
+          watchedState.modal.modalState = 'closed';
+        }
+      });
     });
 };

@@ -26,7 +26,6 @@ export default (url, watchedState, state) => {
         newWatchedState.rssForm.valid = true;
       })
       .catch((error) => {
-        console.log(error);
         newWatchedState.rssForm.valid = false;
         newWatchedState.errors.NetworkError = [error];
       });

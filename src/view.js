@@ -3,26 +3,19 @@ import renderFeeds from './renders/renderFeeds.js';
 import renderPosts from './renders/renderPosts.js';
 import renderModal from './renders/renderModal.js';
 import renderClosingModal from './renders/renderClosingModal.js';
+import renderFeedback from './renders/renderFeedback.js';
 
 export default (state, elements, i18nInstance) => onChange(state, (path, currentValue) => {
   const {
     urlInput,
     rssBtn,
     rssForm,
-    feedbackEl,
   } = elements;
 
-  if (path === 'rssForm.valid') {
-    if (!currentValue) {
-      urlInput.classList.add('is-invalid');
-      feedbackEl.classList.add('text-danger');
-      feedbackEl.classList.remove('text-success');
-    } else {
-      urlInput.classList.remove('is-invalid');
-      feedbackEl.classList.add('text-success');
-      feedbackEl.classList.remove('text-danger');
-    }
-  }
+  // if (path === 'rssForm.valid') {
+  //   renderFeedback(elements, currentValue);
+  // }
+
   if (path === 'rssForm.processState') {
     if (currentValue === 'send') {
       rssBtn.disabled = true;
@@ -33,17 +26,20 @@ export default (state, elements, i18nInstance) => onChange(state, (path, current
       urlInput.focus();
     }
     if (currentValue === 'success') {
-      feedbackEl.textContent = i18nInstance.t('network.success');
+      const text = i18nInstance.t('network.success');
+      renderFeedback(elements, text);
     }
   }
 
   if (path === 'errors.ValidationError') {
     const [validationError] = currentValue;
-    feedbackEl.textContent = validationError;
+    const text = validationError;
+    renderFeedback(elements, text, false);
   }
 
   if (path === 'errors.NetworkError') {
-    feedbackEl.textContent = i18nInstance.t('network.errors.connectionError');
+    const text = i18nInstance.t('network.errors.connectionError');
+    renderFeedback(elements, text, false);
   }
 
   if (path === 'feeds') {
