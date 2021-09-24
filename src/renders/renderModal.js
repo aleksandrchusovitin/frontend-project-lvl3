@@ -3,16 +3,16 @@ export default (state, elements) => {
   const modalTitle = modalContainer.querySelector('.modal-title');
   const modalBody = modalContainer.querySelector('.modal-body');
   const modalMoreBtn = modalContainer.querySelector('.modal-footer .btn');
-  const { body } = document;
+  // const { body } = document;
 
-  modalContainer.classList.add('show');
-  modalContainer.style.display = 'block';
-  modalContainer.setAttribute('aria-modal', 'true');
-  modalContainer.removeAttribute('aria-hidden');
+  // modalContainer.classList.add('show');
+  // modalContainer.style.display = 'block';
+  // modalContainer.setAttribute('aria-modal', 'true');
+  // modalContainer.removeAttribute('aria-hidden');
 
-  body.classList.add('modal-open');
-  body.style.overflow = 'hidden';
-  body.style.paddingRight = '17px';
+  // body.classList.add('modal-open');
+  // body.style.overflow = 'hidden';
+  // body.style.paddingRight = '17px';
 
   modalTitle.innerHTML = '';
   modalBody.innerHTML = '';
@@ -21,7 +21,7 @@ export default (state, elements) => {
   modalBody.textContent = currentPost.description;
   modalMoreBtn.setAttribute('href', currentPost.link);
 
-  const backdrop = document.createElement('div');
-  backdrop.classList.add('modal-backdrop', 'fade', 'show');
-  body.append(backdrop);
+  // const backdrop = document.createElement('div');
+  // backdrop.classList.add('modal-backdrop', 'fade', 'show');
+  // body.append(backdrop);
 };
