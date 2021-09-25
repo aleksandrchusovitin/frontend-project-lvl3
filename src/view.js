@@ -12,12 +12,9 @@ export default (state, elements, i18nInstance) => onChange(state, (path, current
     rssForm,
   } = elements;
 
-  // if (path === 'rssForm.valid') {
-  //   renderFeedback(elements, currentValue);
-  // }
-
   if (path === 'rssForm.processState') {
     if (currentValue === 'send') {
+      renderFeedback(elements);
       rssBtn.disabled = true;
     }
     if (currentValue === 'filling') {
@@ -31,15 +28,22 @@ export default (state, elements, i18nInstance) => onChange(state, (path, current
     }
   }
 
-  if (path === 'errors.ValidationError') {
-    const [validationError] = currentValue;
-    const text = validationError;
-    renderFeedback(elements, text, false);
+  if (path === 'errors.validationError') {
+    if (currentValue !== null) {
+      renderFeedback(elements, currentValue, false);
+    } else {
+      renderFeedback(elements);
+    }
   }
 
-  if (path === 'errors.NetworkError') {
-    const text = i18nInstance.t('network.errors.connectionError');
-    renderFeedback(elements, text, false);
+  if (path === 'errors.networkError') {
+    if (currentValue === 'Network Error') {
+      renderFeedback(elements, i18nInstance.t('network.errors.connectionError'), false);
+    } else if (currentValue === null) {
+      renderFeedback(elements);
+    } else {
+      renderFeedback(elements, i18nInstance.t('network.errors.invalidRss'), false);
+    }
   }
 
   if (path === 'feeds') {

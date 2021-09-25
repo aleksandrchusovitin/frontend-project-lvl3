@@ -8,6 +8,7 @@ export default (url, watchedState, state) => {
 
   const newWatchedState = watchedState; // Понимаю, что это очень плохо :)
   const tick = () => {
+    const timeoutId = setTimeout(tick, 5000);
     axios.get(`https://hexlet-allorigins.herokuapp.com/get?disableCache=true&url=${url}`)
       .then((data) => {
         const { feed, posts } = parser(url, data);
@@ -23,13 +24,13 @@ export default (url, watchedState, state) => {
         newWatchedState.feeds.push(...newFeedsWithId);
         newWatchedState.posts.postsList.push(...newPostsWithId);
         newWatchedState.rssForm.processState = 'success';
-        newWatchedState.rssForm.valid = true;
       })
       .catch((error) => {
-        newWatchedState.rssForm.valid = false;
-        newWatchedState.errors.NetworkError = [error];
+        newWatchedState.errors.networkError = [error.message];
+        if (error.message !== 'Network Error') {
+          clearTimeout(timeoutId);
+        }
       });
-    setTimeout(tick, 5000);
   };
   setTimeout(tick, 5000);
 };

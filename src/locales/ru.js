@@ -19,7 +19,7 @@ export default {
     network: {
       errors: {
         connectionError: 'Ошибка сети',
-        validRss: 'Ресурс не содержит валидный RSS',
+        invalidRss: 'Ресурс не содержит валидный RSS',
       },
       success: 'RSS успешно загружен',
     },
