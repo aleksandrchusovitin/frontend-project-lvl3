@@ -1,8 +1,10 @@
 import * as yup from 'yup';
 import i18n from 'i18next';
+import _ from 'lodash';
 import resources from './locales/index.js';
 import getWatchedState from './view.js';
-import parser from './getRequest.js';
+import getRequest from './getRequest.js';
+import parser from './parser.js';
 
 export default () => {
   const elements = {
@@ -75,7 +77,32 @@ export default () => {
               watchedState.rssForm.valid = true;
               watchedState.errors.validationError = null;
 
-              parser(currentUrl, watchedState, state);
+              getRequest(currentUrl)
+                .then((data) => {
+                  const { feed, posts } = parser(currentUrl, data, i18nInstance);
+                  const feedId = _.uniqueId();
+                  const newFeeds = _.differenceBy([feed], state.feeds, 'url');
+                  const newPosts = _.differenceBy(posts, state.posts.postsList, 'link');
+
+                  const newFeedsWithId = newFeeds.map((newFeed) => ({
+                    ...newFeed,
+                    id: feedId,
+                  }));
+                  const newPostsWithId = newPosts.map((newPost) => ({
+                    ...newPost,
+                    id: _.uniqueId(),
+                    feedId,
+                  }));
+
+                  watchedState.feeds.push(...newFeedsWithId);
+                  watchedState.posts.postsList.push(...newPostsWithId);
+                  watchedState.rssForm.processState = 'success';
+                })
+                .catch((error) => {
+                  console.log(error);
+                  watchedState.errors.networkError = [error.message];
+                  console.log(state);
+                });
             }
           })
           .catch((error) => {
