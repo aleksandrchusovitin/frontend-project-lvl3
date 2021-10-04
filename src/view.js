@@ -20,14 +20,14 @@ export default (state, elements, i18nInstance) => onChange(state, (path, current
     }
     if (currentValue === 'filling') {
       rssForm.reset();
-      rssBtn.disabled = false;
-      urlInput.removeAttribute('readonly');
+      // rssBtn.disabled = false;
+      // urlInput.removeAttribute('readonly');
       urlInput.focus();
     }
     if (currentValue === 'success') {
       const text = i18nInstance.t('network.success');
-      // rssBtn.disabled = false;
-      // urlInput.removeAttribute('readonly');
+      rssBtn.disabled = false;
+      urlInput.removeAttribute('readonly');
       renderFeedback(elements, text);
     }
   }
