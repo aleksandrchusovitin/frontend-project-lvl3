@@ -26,6 +26,8 @@ export default (state, elements, i18nInstance) => onChange(state, (path, current
     }
     if (currentValue === 'success') {
       const text = i18nInstance.t('network.success');
+      rssBtn.disabled = false;
+      urlInput.removeAttribute('readonly');
       renderFeedback(elements, text);
     }
   }
