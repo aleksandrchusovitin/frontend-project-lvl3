@@ -15,11 +15,13 @@ export default (state, elements, i18nInstance) => onChange(state, (path, current
   if (path === 'rssForm.processState') {
     if (currentValue === 'send') {
       renderFeedback(elements);
+      urlInput.setAttribute('readonly', true);
       rssBtn.disabled = true;
     }
     if (currentValue === 'filling') {
       rssForm.reset();
       rssBtn.disabled = false;
+      urlInput.removeAttribute('readonly');
       urlInput.focus();
     }
     if (currentValue === 'success') {
