@@ -42,7 +42,7 @@ export default (state, elements, i18nInstance) => onChange(state, (path, current
     } else if (currentValue === null) {
       renderFeedback(elements);
     } else {
-      renderFeedback(elements, i18nInstance.t('network.errors.invalidRss'), false);
+      renderFeedback(elements, currentValue, false);
     }
   }
 

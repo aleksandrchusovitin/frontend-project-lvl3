@@ -72,7 +72,7 @@ export default () => {
             const isDublicateFeed = state.feeds.find(({ url }) => url === currentUrl);
             if (isDublicateFeed) {
               watchedState.rssForm.valid = false;
-              watchedState.errors.validationError = [i18nInstance.t('validation.errors.dublicateUrl')];
+              watchedState.errors.validationError = i18nInstance.t('validation.errors.dublicateUrl');
             } else {
               watchedState.rssForm.valid = true;
               watchedState.errors.validationError = null;
@@ -100,13 +100,13 @@ export default () => {
                 })
                 .catch((error) => {
                   console.log(error);
-                  watchedState.errors.networkError = [error.message];
                   console.log(state);
+                  watchedState.errors.networkError = error.message;
                 });
             }
           })
           .catch((error) => {
-            watchedState.errors.validationError = [...error.errors];
+            watchedState.errors.validationError = error.errors;
             watchedState.rssForm.valid = false;
           });
         watchedState.rssForm.processState = 'filling';
@@ -120,7 +120,6 @@ export default () => {
           watchedState.modal.modalPostId = btnId;
           watchedState.modal.modalState = 'opened';
           watchedState.posts.postsReadList.add(btnId);
-          console.log(state);
         }
       });
 
