@@ -27,7 +27,10 @@ export default () => {
       postsList: [],
       postsReadList: new Set(),
     },
-    error: null,
+    errors: {
+      validationError: null,
+      networkError: null,
+    },
     rssForm: {
       valid: null,
       processState: 'filling',
@@ -69,10 +72,10 @@ export default () => {
             const isDublicateFeed = state.feeds.find(({ url }) => url === currentUrl);
             if (isDublicateFeed) {
               watchedState.rssForm.valid = false;
-              watchedState.error = i18nInstance.t('validation.errors.dublicateUrl');
+              watchedState.errors.validationError = i18nInstance.t('validation.errors.dublicateUrl');
             } else {
               watchedState.rssForm.valid = true;
-              //!!! watchedState.error = null; 
+              watchedState.errors.validationError = null;
 
               getRequest(currentUrl)
                 .then((data) => {
