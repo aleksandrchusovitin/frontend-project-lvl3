@@ -26,27 +26,17 @@ export default (state, elements, i18nInstance) => onChange(state, (path, current
     }
     if (currentValue === 'success') {
       const text = i18nInstance.t('network.success');
-      rssBtn.disabled = false;
-      urlInput.removeAttribute('readonly');
+      // rssBtn.disabled = false;
+      // urlInput.removeAttribute('readonly');
       renderFeedback(elements, text);
     }
   }
 
-  if (path === 'errors.validationError') {
+  if (path === 'error') {
     if (currentValue !== null) {
       renderFeedback(elements, currentValue, false);
     } else {
       renderFeedback(elements);
-    }
-  }
-
-  if (path === 'errors.networkError') {
-    if (currentValue === 'Network Error') {
-      renderFeedback(elements, i18nInstance.t('network.errors.connectionError'), false);
-    } else if (currentValue === null) {
-      renderFeedback(elements);
-    } else {
-      renderFeedback(elements, currentValue, false);
     }
   }
 

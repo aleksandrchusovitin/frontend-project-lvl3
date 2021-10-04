@@ -27,10 +27,7 @@ export default () => {
       postsList: [],
       postsReadList: new Set(),
     },
-    errors: {
-      validationError: null,
-      networkError: null,
-    },
+    error: null,
     rssForm: {
       valid: null,
       processState: 'filling',
@@ -72,10 +69,10 @@ export default () => {
             const isDublicateFeed = state.feeds.find(({ url }) => url === currentUrl);
             if (isDublicateFeed) {
               watchedState.rssForm.valid = false;
-              watchedState.errors.validationError = i18nInstance.t('validation.errors.dublicateUrl');
+              watchedState.error = i18nInstance.t('validation.errors.dublicateUrl');
             } else {
               watchedState.rssForm.valid = true;
-              watchedState.errors.validationError = null;
+              watchedState.error = null;
 
               getRequest(currentUrl)
                 .then((data) => {
@@ -99,14 +96,16 @@ export default () => {
                   watchedState.rssForm.processState = 'success';
                 })
                 .catch((error) => {
-                  console.log(error);
-                  console.log(state);
-                  watchedState.errors.networkError = error.message;
+                  if (error.isParsingError) {
+                    watchedState.error = i18nInstance.t('network.errors.invalidRss');
+                  } else {
+                    watchedState.error = i18nInstance.t('network.errors.connectionError');
+                  }
                 });
             }
           })
           .catch((error) => {
-            watchedState.errors.validationError = error.errors;
+            watchedState.error = error.errors;
             watchedState.rssForm.valid = false;
           });
         watchedState.rssForm.processState = 'filling';

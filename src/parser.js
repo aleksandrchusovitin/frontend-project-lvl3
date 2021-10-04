@@ -1,11 +1,13 @@
-export default (url, data, i18nInstance) => {
+export default (url, data) => {
   const content = data.data.contents;
   const parser = new DOMParser();
   const doc = parser.parseFromString(content, 'application/xml');
 
   const parseError = doc.querySelector('parsererror');
   if (parseError) {
-    throw new Error(i18nInstance.t('network.errors.invalidRss'));
+    const error = new Error(parseError.textContent);
+    error.isParsingError = true;
+    throw error;
   }
 
   const feedName = doc.querySelector('channel title').textContent;
