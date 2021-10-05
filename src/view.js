@@ -4,32 +4,15 @@ import renderPosts from './renders/renderPosts.js';
 import renderModal from './renders/renderModal.js';
 import renderClosingModal from './renders/renderClosingModal.js';
 import renderFeedback from './renders/renderFeedback.js';
+import renderForm from './renders/renderForm.js';
 
 export default (state, elements, i18nInstance) => onChange(state, (path, currentValue) => {
-  const {
-    urlInput,
-    rssBtn,
-    rssForm,
-  } = elements;
-
   if (path === 'rssForm.processState') {
-    if (currentValue === 'send') {
-      renderFeedback(elements);
-      urlInput.setAttribute('readonly', true);
-      rssBtn.disabled = true;
-    }
-    if (currentValue === 'filling') {
-      rssForm.reset();
-      // rssBtn.disabled = false;
-      // urlInput.removeAttribute('readonly');
-      urlInput.focus();
-    }
-    if (currentValue === 'success') {
+    if (currentValue === 'completed') {
       const text = i18nInstance.t('network.success');
-      rssBtn.disabled = false;
-      urlInput.removeAttribute('readonly');
       renderFeedback(elements, text);
     }
+    renderForm(elements, currentValue, i18nInstance);
   }
 
   if (path === 'error') {

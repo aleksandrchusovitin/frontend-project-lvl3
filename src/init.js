@@ -62,7 +62,7 @@ export default () => {
         const formData = new FormData(e.target);
         const currentUrl = formData.get('url').trim();
         watchedState.rssForm.fields.url = currentUrl;
-        watchedState.rssForm.processState = 'send';
+        watchedState.rssForm.processState = 'loading';
         schema
           .validate(state.rssForm.fields)
           .then(() => {
@@ -70,6 +70,7 @@ export default () => {
             if (isDublicateFeed) {
               watchedState.rssForm.valid = false;
               watchedState.error = i18nInstance.t('validation.errors.dublicateUrl');
+              watchedState.rssForm.processState = 'error';
             } else {
               watchedState.rssForm.valid = true;
               watchedState.error = null;
@@ -93,7 +94,7 @@ export default () => {
 
                   watchedState.feeds.push(...newFeedsWithId);
                   watchedState.posts.postsList.push(...newPostsWithId);
-                  watchedState.rssForm.processState = 'success';
+                  watchedState.rssForm.processState = 'completed';
                 })
                 .catch((error) => {
                   if (error.isParsingError) {
@@ -101,12 +102,14 @@ export default () => {
                   } else {
                     watchedState.error = i18nInstance.t('network.errors.connectionError');
                   }
+                  watchedState.rssForm.processState = 'error';
                 });
             }
           })
           .catch((error) => {
             watchedState.error = error.errors;
             watchedState.rssForm.valid = false;
+            watchedState.rssForm.processState = 'error';
           });
         watchedState.rssForm.processState = 'filling';
       });
