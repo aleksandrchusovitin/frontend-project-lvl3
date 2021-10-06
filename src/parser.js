@@ -22,7 +22,7 @@ export default (url, data) => {
   const items = doc.querySelectorAll('item');
   const posts = Array.from(items).map((item) => {
     const itemName = item.querySelector('title').textContent;
-    const itemLink = item.querySelector('link').nextSibling.textContent;
+    const itemLink = item.querySelector('link').textContent;
     const itemDescription = item.querySelector('description').textContent;
 
     return {

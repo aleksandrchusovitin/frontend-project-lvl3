@@ -47,6 +47,30 @@ export default () => {
     .then(() => {
       const watchedState = getWatchedState(state, elements, i18nInstance);
 
+      const startTimeout = (feeds) => {
+        const tick = () => {
+          feeds.forEach((feed) => {
+            getRequest(feed.url)
+              .then((data) => {
+                const { posts } = parser(feed.url, data, i18nInstance);
+                const newPosts = _.differenceBy(posts, state.posts.postsList, 'link');
+
+                const newPostsWithId = newPosts.map((newPost) => ({
+                  ...newPost,
+                  id: _.uniqueId(),
+                  feedId: feed.id,
+                }));
+                watchedState.posts.postsList.push(...newPostsWithId);
+              })
+              .catch(() => {
+
+              });
+          });
+          setTimeout(tick, 5000);
+        };
+        setTimeout(tick, 5000);
+      };
+
       yup.setLocale({
         string: {
           url: i18nInstance.t('validation.errors.incorrectUrl'),
@@ -111,6 +135,7 @@ export default () => {
             watchedState.rssForm.valid = false;
             watchedState.rssForm.processState = 'error';
           });
+        startTimeout(state.feeds); // вызов функции
         watchedState.rssForm.processState = 'filling';
       });
 
