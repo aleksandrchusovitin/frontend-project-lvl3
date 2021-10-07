@@ -1,5 +1,4 @@
 export default (url, data) => {
-  console.log(data);
   const content = data.data.contents;
   const parser = new DOMParser();
   const doc = parser.parseFromString(content, 'application/xml');
