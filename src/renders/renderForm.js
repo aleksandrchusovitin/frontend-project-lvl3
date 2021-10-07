@@ -1,6 +1,4 @@
 export default (elements, process) => {
-  console.log('RENDER');
-  console.log(process);
   const { rssForm } = elements;
 
   const isBlockedForm = (process === 'loading');

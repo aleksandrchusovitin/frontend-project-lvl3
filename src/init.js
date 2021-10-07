@@ -7,11 +7,12 @@ import getRequest from './getRequest.js';
 import parser from './parser.js';
 
 const startTimeout = (state, watchedState, i18nInstance) => {
-  const tick = () => {
-    state.feeds.forEach((feed) => {
-      getRequest(feed.url)
-        .then((data) => {
-          const { posts } = parser(feed.url, data, i18nInstance);
+  setTimeout(() => {
+    const requests = state.feeds.map((feed) => getRequest(feed.url));
+    Promise.all(requests)
+      .then((data) => {
+        data.forEach((feed) => {
+          const { posts } = parser(feed.url, feed, i18nInstance);
           const newPosts = _.differenceBy(posts, state.posts.postsList, 'link');
 
           const newPostsWithId = newPosts.map((newPost) => ({
@@ -20,11 +21,10 @@ const startTimeout = (state, watchedState, i18nInstance) => {
             feedId: feed.id,
           }));
           watchedState.posts.postsList.push(...newPostsWithId);
-        })
-        .then(setTimeout(tick, 5000));
-    });
-  };
-  setTimeout(tick, 5000);
+        });
+      });
+    startTimeout(state, watchedState, i18nInstance);
+  }, 5000);
 };
 
 export default () => {
