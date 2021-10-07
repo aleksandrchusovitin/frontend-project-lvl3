@@ -1,8 +1,9 @@
 export default (elements, process) => {
+  console.log('RENDER');
+  console.log(process);
   const { rssForm } = elements;
 
   const isBlockedForm = (process === 'loading');
-  // const isFillingForm = (process === 'filling');
 
   const row = document.createElement('div');
   row.classList.add('row');
@@ -24,9 +25,6 @@ export default (elements, process) => {
   if (isBlockedForm) {
     inputUrl.setAttribute('readonly', true);
   }
-  // if (isFillingForm) {
-  //   inputUrl.focus();
-  // }
 
   const labelInputUrl = document.createElement('label');
   labelInputUrl.setAttribute('for', 'url-input');

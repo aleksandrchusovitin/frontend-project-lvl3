@@ -6,6 +6,27 @@ import getWatchedState from './view.js';
 import getRequest from './getRequest.js';
 import parser from './parser.js';
 
+const startTimeout = (state, watchedState, i18nInstance) => {
+  const tick = () => {
+    state.feeds.forEach((feed) => {
+      getRequest(feed.url)
+        .then((data) => {
+          const { posts } = parser(feed.url, data, i18nInstance);
+          const newPosts = _.differenceBy(posts, state.posts.postsList, 'link');
+
+          const newPostsWithId = newPosts.map((newPost) => ({
+            ...newPost,
+            id: _.uniqueId(),
+            feedId: feed.id,
+          }));
+          watchedState.posts.postsList.push(...newPostsWithId);
+        })
+        .then(setTimeout(tick, 5000));
+    });
+  };
+  setTimeout(tick, 5000);
+};
+
 export default () => {
   const elements = {
     rssForm: document.querySelector('.rss-form'),
@@ -46,30 +67,6 @@ export default () => {
   })
     .then(() => {
       const watchedState = getWatchedState(state, elements, i18nInstance);
-
-      const startTimeout = (feeds) => {
-        const tick = () => {
-          feeds.forEach((feed) => {
-            getRequest(feed.url)
-              .then((data) => {
-                const { posts } = parser(feed.url, data, i18nInstance);
-                const newPosts = _.differenceBy(posts, state.posts.postsList, 'link');
-
-                const newPostsWithId = newPosts.map((newPost) => ({
-                  ...newPost,
-                  id: _.uniqueId(),
-                  feedId: feed.id,
-                }));
-                watchedState.posts.postsList.push(...newPostsWithId);
-              })
-              .catch(() => {
-
-              });
-          });
-          setTimeout(tick, 5000);
-        };
-        setTimeout(tick, 5000);
-      };
 
       yup.setLocale({
         string: {
@@ -135,15 +132,14 @@ export default () => {
             watchedState.rssForm.valid = false;
             watchedState.rssForm.processState = 'error';
           });
-        startTimeout(state.feeds); // вызов функции
-        watchedState.rssForm.processState = 'filling';
+        startTimeout(state, watchedState, i18nInstance); // вызов функции
+        // watchedState.rssForm.processState = 'filling';
       });
 
       elements.postsContainer.addEventListener('click', (e) => {
         const { target } = e;
         const btnId = target.dataset.id;
         if (btnId) {
-          e.preventDefault();
           watchedState.modal.modalPostId = btnId;
           watchedState.modal.modalState = 'opened';
           watchedState.posts.postsReadList.add(btnId);
