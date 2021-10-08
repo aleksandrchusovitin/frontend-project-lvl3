@@ -50,4 +50,5 @@ export default (elements, process) => {
 
   rssForm.innerHTML = '';
   rssForm.append(row);
+  inputUrl.focus();
 };
