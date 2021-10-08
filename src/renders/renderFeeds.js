@@ -22,11 +22,11 @@ export default (state, elements, i18nInstance) => {
     li.classList.add('list-group-item', 'border-0', 'border-end-0');
 
     const feedTitle = document.createElement('h3');
-    feedTitle.classList.add('h6', 'm0');
+    feedTitle.classList.add('h6', 'm-0');
     feedTitle.textContent = name;
 
     const feedDescription = document.createElement('p');
-    feedDescription.classList.add('m0', 'small', 'text-black-50');
+    feedDescription.classList.add('m-0', 'small', 'text-black-50');
     feedDescription.textContent = description;
 
     li.append(feedTitle, feedDescription);

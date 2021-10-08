@@ -49,7 +49,7 @@ export default (state, elements, i18nInstance) => {
     return li;
   });
 
-  ul.append(...liElements.reverse());
+  ul.append(...liElements);
   card.append(ul);
   postsContainer.append(card);
 };
