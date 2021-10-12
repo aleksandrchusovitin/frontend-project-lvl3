@@ -8,7 +8,7 @@ import renderForm from './renders/renderForm.js';
 
 export default (state, elements, i18nInstance) => {
   const watchedState = onChange(state, (path, currentValue) => {
-    if (path === 'rssForm.processState') {
+    if (path === 'rssForm.state') {
       if (currentValue === 'completed') {
         const text = i18nInstance.t('network.success');
         renderFeedback(elements, text);
@@ -16,7 +16,7 @@ export default (state, elements, i18nInstance) => {
       renderForm(elements, currentValue, i18nInstance);
     }
 
-    if (path === 'error') {
+    if (path === 'rssForm.error') {
       if (currentValue !== null) {
         renderFeedback(elements, currentValue, false);
       } else {

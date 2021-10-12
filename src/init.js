@@ -48,10 +48,10 @@ export default () => {
       postsList: [],
       postsReadList: new Set(),
     },
-    error: null,
     rssForm: {
+      error: null,
       valid: null,
-      processState: 'filling',
+      state: 'filling',
       fields: {
         url: '',
       },
@@ -83,18 +83,18 @@ export default () => {
         const formData = new FormData(e.target);
         const currentUrl = formData.get('url').trim();
         watchedState.rssForm.fields.url = currentUrl;
-        watchedState.rssForm.processState = 'loading';
+        watchedState.rssForm.state = 'loading';
         schema
           .validate(state.rssForm.fields)
           .then(() => {
             const isDublicateFeed = state.feeds.find(({ url }) => url === currentUrl);
             if (isDublicateFeed) {
               watchedState.rssForm.valid = false;
-              watchedState.error = i18nInstance.t('validation.errors.dublicateUrl');
-              watchedState.rssForm.processState = 'error';
+              watchedState.rssForm.error = i18nInstance.t('validation.errors.dublicateUrl');
+              watchedState.rssForm.state = 'error';
             } else {
               watchedState.rssForm.valid = true;
-              watchedState.error = null;
+              watchedState.rssForm.error = null;
 
               getRequest(currentUrl)
                 .then((data) => {
@@ -115,25 +115,24 @@ export default () => {
 
                   watchedState.feeds.push(...newFeedsWithId);
                   watchedState.posts.postsList.push(...newPostsWithId);
-                  watchedState.rssForm.processState = 'completed';
+                  watchedState.rssForm.state = 'completed';
                 })
                 .catch((error) => {
                   if (error.isParsingError) {
-                    watchedState.error = i18nInstance.t('network.errors.invalidRss');
+                    watchedState.rssForm.error = i18nInstance.t('network.errors.invalidRss');
                   } else {
-                    watchedState.error = i18nInstance.t('network.errors.connectionError');
+                    watchedState.rssForm.error = i18nInstance.t('network.errors.connectionError');
                   }
-                  watchedState.rssForm.processState = 'error';
+                  watchedState.rssForm.state = 'error';
                 });
             }
           })
           .catch((error) => {
-            watchedState.error = error.errors;
+            watchedState.rssForm.error = error.errors;
             watchedState.rssForm.valid = false;
-            watchedState.rssForm.processState = 'error';
+            watchedState.rssForm.state = 'error';
           });
-        startTimeout(state, watchedState, i18nInstance); // вызов функции
-        // watchedState.rssForm.processState = 'filling';
+        startTimeout(state, watchedState, i18nInstance);
       });
 
       elements.postsContainer.addEventListener('click', (e) => {
