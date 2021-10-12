@@ -60,7 +60,6 @@ export default () => {
     },
     rssForm: {
       error: null,
-      // valid: null,
       state: 'filling',
       url: '',
     },
@@ -88,31 +87,30 @@ export default () => {
           .then(() => {
             const isDublicateFeed = state.feeds.find(({ url }) => url === currentUrl);
             if (isDublicateFeed) {
-              // watchedState.rssForm.valid = false;
               watchedState.rssForm.error = i18nInstance.t('validation.errors.dublicateUrl');
               watchedState.rssForm.state = 'error';
             } else {
-              // watchedState.rssForm.valid = true;
               watchedState.rssForm.error = null;
 
               getRequest(currentUrl)
                 .then((data) => {
                   const { feed, posts } = parser(currentUrl, data, i18nInstance);
                   const feedId = _.uniqueId();
-                  const newFeeds = _.differenceBy([feed], state.feeds, 'url');
-                  const newPosts = _.differenceBy(posts, state.posts.postsList, 'link');
+                  // const newFeeds = _.differenceBy([feed], state.feeds, 'url');
+                  // const newPosts = _.differenceBy(posts, state.posts.postsList, 'link');
 
-                  const newFeedsWithId = newFeeds.map((newFeed) => ({
-                    ...newFeed,
+                  const newFeedWithId = {
+                    ...feed,
                     id: feedId,
-                  }));
-                  const newPostsWithId = newPosts.map((newPost) => ({
-                    ...newPost,
+                  };
+
+                  const newPostsWithId = posts.map((post) => ({
+                    ...post,
                     id: _.uniqueId(),
                     feedId,
                   }));
 
-                  watchedState.feeds.push(...newFeedsWithId);
+                  watchedState.feeds.push(newFeedWithId);
                   watchedState.posts.postsList.push(...newPostsWithId);
                   watchedState.rssForm.state = 'completed';
                 })
@@ -128,7 +126,6 @@ export default () => {
           })
           .catch((error) => {
             watchedState.rssForm.error = error.errors;
-            // watchedState.rssForm.valid = false;
             watchedState.rssForm.state = 'error';
           });
         startTimeout(state, watchedState, i18nInstance);
