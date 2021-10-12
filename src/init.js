@@ -27,6 +27,16 @@ const startTimeout = (state, watchedState, i18nInstance) => {
   }, 5000);
 };
 
+const getValidateUrlShema = (i18nInstance) => {
+  yup.setLocale({
+    string: {
+      url: i18nInstance.t('validation.errors.incorrectUrl'),
+    },
+  });
+
+  return yup.string().url().required();
+};
+
 export default () => {
   const elements = {
     rssForm: document.querySelector('.rss-form'),
@@ -50,11 +60,9 @@ export default () => {
     },
     rssForm: {
       error: null,
-      valid: null,
+      // valid: null,
       state: 'filling',
-      fields: {
-        url: '',
-      },
+      url: '',
     },
   };
 
@@ -68,32 +76,23 @@ export default () => {
     .then(() => {
       const watchedState = getWatchedState(state, elements, i18nInstance);
 
-      yup.setLocale({
-        string: {
-          url: i18nInstance.t('validation.errors.incorrectUrl'),
-        },
-      });
-
-      const schema = yup.object().shape({
-        url: yup.string().url(),
-      });
-
       elements.rssForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const currentUrl = formData.get('url').trim();
-        watchedState.rssForm.fields.url = currentUrl;
+        watchedState.rssForm.url = currentUrl;
         watchedState.rssForm.state = 'loading';
-        schema
-          .validate(state.rssForm.fields)
+
+        getValidateUrlShema(i18nInstance)
+          .validate(state.rssForm.url)
           .then(() => {
             const isDublicateFeed = state.feeds.find(({ url }) => url === currentUrl);
             if (isDublicateFeed) {
-              watchedState.rssForm.valid = false;
+              // watchedState.rssForm.valid = false;
               watchedState.rssForm.error = i18nInstance.t('validation.errors.dublicateUrl');
               watchedState.rssForm.state = 'error';
             } else {
-              watchedState.rssForm.valid = true;
+              // watchedState.rssForm.valid = true;
               watchedState.rssForm.error = null;
 
               getRequest(currentUrl)
@@ -129,7 +128,7 @@ export default () => {
           })
           .catch((error) => {
             watchedState.rssForm.error = error.errors;
-            watchedState.rssForm.valid = false;
+            // watchedState.rssForm.valid = false;
             watchedState.rssForm.state = 'error';
           });
         startTimeout(state, watchedState, i18nInstance);
