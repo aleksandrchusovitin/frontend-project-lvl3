@@ -1,10 +1,9 @@
 import onChange from 'on-change';
-import renderFeeds from './renders/renderFeeds.js';
-import renderPosts from './renders/renderPosts.js';
-import renderModal from './renders/renderModal.js';
-// import renderClosingModal from './renders/renderClosingModal.js';
-import renderFeedback from './renders/renderFeedback.js';
-import renderForm from './renders/renderForm.js';
+import renderFeeds from './renders/feeds.js';
+import renderPosts from './renders/posts.js';
+import renderModal from './renders/modal.js';
+import renderFeedback from './renders/feedback.js';
+import renderForm from './renders/form.js';
 
 export default (state, elements, i18nInstance) => {
   const watchedState = onChange(state, (path, currentValue) => {
@@ -33,12 +32,7 @@ export default (state, elements, i18nInstance) => {
     }
 
     if (path === 'modal.modalPostId') {
-      // if (currentValue === 'opened') {
       renderModal(state, elements);
-      // }
-      // if (currentValue === 'closed') {
-      //   renderClosingModal(elements);
-      // }
     }
   });
 
