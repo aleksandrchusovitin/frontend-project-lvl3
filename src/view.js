@@ -2,7 +2,7 @@ import onChange from 'on-change';
 import renderFeeds from './renders/renderFeeds.js';
 import renderPosts from './renders/renderPosts.js';
 import renderModal from './renders/renderModal.js';
-import renderClosingModal from './renders/renderClosingModal.js';
+// import renderClosingModal from './renders/renderClosingModal.js';
 import renderFeedback from './renders/renderFeedback.js';
 import renderForm from './renders/renderForm.js';
 
@@ -34,7 +34,7 @@ export default (state, elements, i18nInstance) => {
 
     if (path === 'modal.modalPostId') {
       // if (currentValue === 'opened') {
-        renderModal(state, elements);
+      renderModal(state, elements);
       // }
       // if (currentValue === 'closed') {
       //   renderClosingModal(elements);
