@@ -27,14 +27,18 @@ const startTimeout = (state, watchedState, i18nInstance) => {
   }, 5000);
 };
 
-const getValidateUrlShema = (i18nInstance) => {
+const getValidateUrlShema = (i18nInstance, state) => {
+  const urls = state.feeds.map((feed) => feed.url);
   yup.setLocale({
     string: {
       url: i18nInstance.t('validation.errors.incorrectUrl'),
     },
+    mixed: {
+      notOneOf: i18nInstance.t('validation.errors.dublicateUrl'),
+    },
   });
 
-  return yup.string().url().required();
+  return yup.string().url().required().notOneOf(urls);
 };
 
 export default () => {
@@ -82,47 +86,39 @@ export default () => {
         watchedState.rssForm.url = currentUrl;
         watchedState.rssForm.state = 'loading';
 
-        getValidateUrlShema(i18nInstance)
+        getValidateUrlShema(i18nInstance, state)
           .validate(state.rssForm.url)
           .then(() => {
-            const isDublicateFeed = state.feeds.find(({ url }) => url === currentUrl);
-            if (isDublicateFeed) {
-              watchedState.rssForm.error = i18nInstance.t('validation.errors.dublicateUrl');
-              watchedState.rssForm.state = 'error';
-            } else {
-              watchedState.rssForm.error = null;
+            watchedState.rssForm.error = null;
 
-              getRequest(currentUrl)
-                .then((data) => {
-                  const { feed, posts } = parser(currentUrl, data, i18nInstance);
-                  const feedId = _.uniqueId();
-                  // const newFeeds = _.differenceBy([feed], state.feeds, 'url');
-                  // const newPosts = _.differenceBy(posts, state.posts.postsList, 'link');
+            getRequest(currentUrl)
+              .then((data) => {
+                const { feed, posts } = parser(currentUrl, data, i18nInstance);
+                const feedId = _.uniqueId();
 
-                  const newFeedWithId = {
-                    ...feed,
-                    id: feedId,
-                  };
+                const newFeedWithId = {
+                  ...feed,
+                  id: feedId,
+                };
 
-                  const newPostsWithId = posts.map((post) => ({
-                    ...post,
-                    id: _.uniqueId(),
-                    feedId,
-                  }));
+                const newPostsWithId = posts.map((post) => ({
+                  ...post,
+                  id: _.uniqueId(),
+                  feedId,
+                }));
 
-                  watchedState.feeds.push(newFeedWithId);
-                  watchedState.posts.postsList.push(...newPostsWithId);
-                  watchedState.rssForm.state = 'completed';
-                })
-                .catch((error) => {
-                  if (error.isParsingError) {
-                    watchedState.rssForm.error = i18nInstance.t('network.errors.invalidRss');
-                  } else {
-                    watchedState.rssForm.error = i18nInstance.t('network.errors.connectionError');
-                  }
-                  watchedState.rssForm.state = 'error';
-                });
-            }
+                watchedState.feeds.push(newFeedWithId);
+                watchedState.posts.postsList.push(...newPostsWithId);
+                watchedState.rssForm.state = 'completed';
+              })
+              .catch((error) => {
+                if (error.isParsingError) {
+                  watchedState.rssForm.error = i18nInstance.t('network.errors.invalidRss');
+                } else {
+                  watchedState.rssForm.error = i18nInstance.t('network.errors.connectionError');
+                }
+                watchedState.rssForm.state = 'error';
+              });
           })
           .catch((error) => {
             watchedState.rssForm.error = error.errors;
