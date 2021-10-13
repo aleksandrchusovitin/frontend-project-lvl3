@@ -32,13 +32,13 @@ export default (state, elements, i18nInstance) => {
       renderPosts(state, elements, i18nInstance);
     }
 
-    if (path === 'modal.modalState') {
-      if (currentValue === 'opened') {
+    if (path === 'modal.modalPostId') {
+      // if (currentValue === 'opened') {
         renderModal(state, elements);
-      }
-      if (currentValue === 'closed') {
-        renderClosingModal(elements);
-      }
+      // }
+      // if (currentValue === 'closed') {
+      //   renderClosingModal(elements);
+      // }
     }
   });
 
