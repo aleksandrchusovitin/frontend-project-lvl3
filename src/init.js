@@ -5,8 +5,9 @@ import resources from './locales/index.js';
 import getWatchedState from './view.js';
 import getRequest from './getRequest.js';
 import parser from './parser.js';
+import loadFeed from './loadFeed.js';
 
-const startTimeout = (state, watchedState, i18nInstance) => {
+const updatePosts = (state, watchedState, i18nInstance) => {
   setTimeout(() => {
     const requests = state.feeds.map((feed) => getRequest(feed.url));
     Promise.all(requests)
@@ -23,12 +24,12 @@ const startTimeout = (state, watchedState, i18nInstance) => {
           watchedState.posts.postsList.push(...newPostsWithId);
         });
       });
-    startTimeout(state, watchedState, i18nInstance);
+    updatePosts(state, watchedState, i18nInstance);
   }, 5000);
 };
 
-const validate = (url, feeds) => {
-  const shema = yup.string().url().required().notOneOf(feeds);
+const validate = (url, links) => {
+  const shema = yup.string().url().required().notOneOf(links);
   shema.validateSync(url);
 };
 
@@ -84,14 +85,13 @@ export default () => {
         const currentUrl = formData.get('url').trim();
 
         try {
-          validate(currentUrl, state.feeds.map((feed) => feed.url));
+          validate(currentUrl, state.feeds.map((item) => item.url));
           watchedState.rssForm.url = currentUrl;
           watchedState.rssForm.state = 'loading';
           watchedState.rssForm.error = null;
 
-          getRequest(currentUrl)
-            .then((data) => {
-              const { feed, posts } = parser(currentUrl, data, i18nInstance);
+          loadFeed(currentUrl)
+            .then(({ feed, posts }) => {
               const feedId = _.uniqueId();
 
               const newFeedWithId = {
@@ -121,7 +121,7 @@ export default () => {
           watchedState.rssForm.error = error.message;
           watchedState.rssForm.state = 'error';
         }
-        startTimeout(state, watchedState, i18nInstance);
+        updatePosts(state, watchedState, i18nInstance);
       });
 
       elements.postsContainer.addEventListener('click', (e) => {
