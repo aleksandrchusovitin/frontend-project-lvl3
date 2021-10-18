@@ -90,7 +90,7 @@ export default () => {
         const currentUrl = formData.get('url').trim();
 
         try {
-          validate(currentUrl, state.feeds);
+          validate(currentUrl, state.feeds.map((feed) => feed.url));
           watchedState.rssForm.url = currentUrl;
           watchedState.rssForm.state = 'loading';
           watchedState.rssForm.error = null;
