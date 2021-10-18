@@ -27,16 +27,8 @@ const startTimeout = (state, watchedState, i18nInstance) => {
   }, 5000);
 };
 
-const getValidateUrlShema = (i18nInstance, state) => {
+const getValidateUrlShema = (state) => {
   const urls = state.feeds.map((feed) => feed.url);
-  yup.setLocale({
-    string: {
-      url: i18nInstance.t('validation.errors.incorrectUrl'),
-    },
-    mixed: {
-      notOneOf: i18nInstance.t('validation.errors.dublicateUrl'),
-    },
-  });
 
   return yup.string().url().required().notOneOf(urls);
 };
@@ -76,6 +68,15 @@ export default () => {
     resources,
   })
     .then(() => {
+      yup.setLocale({
+        string: {
+          url: i18nInstance.t('validation.errors.incorrectUrl'),
+        },
+        mixed: {
+          notOneOf: i18nInstance.t('validation.errors.dublicateUrl'),
+        },
+      });
+
       const watchedState = getWatchedState(state, elements, i18nInstance);
 
       elements.rssForm.addEventListener('submit', (e) => {
