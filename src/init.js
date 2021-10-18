@@ -27,15 +27,16 @@ const startTimeout = (state, watchedState, i18nInstance) => {
   }, 5000);
 };
 
-// const validate = (url, links) => {
-
-// };
-
-const getValidateUrlShema = (state) => {
-  const urls = state.feeds.map((feed) => feed.url);
-
-  return yup.string().url().required().notOneOf(urls);
+const validate = (url, feeds) => {
+  const shema = yup.string().url().required().notOneOf(feeds);
+  shema.validateSync(url);
 };
+
+// const getValidateUrlShema = (state) => {
+//   const urls = state.feeds.map((feed) => feed.url);
+
+//   return yup.string().url().required().notOneOf(urls);
+// };
 
 export default () => {
   const elements = {
@@ -87,47 +88,86 @@ export default () => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const currentUrl = formData.get('url').trim();
-        watchedState.rssForm.url = currentUrl;
-        watchedState.rssForm.state = 'loading';
 
-        getValidateUrlShema(state)
-          .validate(state.rssForm.url)
-          .then(() => {
-            watchedState.rssForm.error = null;
+        try {
+          validate(currentUrl, state.feeds);
+          watchedState.rssForm.url = currentUrl;
+          watchedState.rssForm.state = 'loading';
+          watchedState.rssForm.error = null;
 
-            getRequest(currentUrl)
-              .then((data) => {
-                const { feed, posts } = parser(currentUrl, data, i18nInstance);
-                const feedId = _.uniqueId();
+          getRequest(currentUrl)
+            .then((data) => {
+              const { feed, posts } = parser(currentUrl, data, i18nInstance);
+              const feedId = _.uniqueId();
 
-                const newFeedWithId = {
-                  ...feed,
-                  id: feedId,
-                };
+              const newFeedWithId = {
+                ...feed,
+                id: feedId,
+              };
 
-                const newPostsWithId = posts.map((post) => ({
-                  ...post,
-                  id: _.uniqueId(),
-                  feedId,
-                }));
+              const newPostsWithId = posts.map((post) => ({
+                ...post,
+                id: _.uniqueId(),
+                feedId,
+              }));
 
-                watchedState.feeds.push(newFeedWithId);
-                watchedState.posts.postsList.push(...newPostsWithId);
-                watchedState.rssForm.state = 'completed';
-              })
-              .catch((error) => {
-                if (error.isParsingError) {
-                  watchedState.rssForm.error = i18nInstance.t('network.errors.invalidRss');
-                } else {
-                  watchedState.rssForm.error = i18nInstance.t('network.errors.connectionError');
-                }
-                watchedState.rssForm.state = 'error';
-              });
-          })
-          .catch((error) => {
-            watchedState.rssForm.error = error.errors;
-            watchedState.rssForm.state = 'error';
-          });
+              watchedState.feeds.push(newFeedWithId);
+              watchedState.posts.postsList.push(...newPostsWithId);
+              watchedState.rssForm.state = 'completed';
+            })
+            .catch((error) => {
+              if (error.isParsingError) {
+                watchedState.rssForm.error = i18nInstance.t('network.errors.invalidRss');
+              } else {
+                watchedState.rssForm.error = i18nInstance.t('network.errors.connectionError');
+              }
+              watchedState.rssForm.state = 'error';
+            });
+        } catch (error) {
+          watchedState.rssForm.error = error.message;
+          watchedState.rssForm.state = 'error';
+        }
+        // watchedState.rssForm.url = currentUrl;
+        // watchedState.rssForm.state = 'loading';
+
+        // getValidateUrlShema(state)
+        //   .validate(state.rssForm.url)
+          // .then(() => {
+          //   watchedState.rssForm.error = null;
+
+            // getRequest(currentUrl)
+            //   .then((data) => {
+            //     const { feed, posts } = parser(currentUrl, data, i18nInstance);
+            //     const feedId = _.uniqueId();
+
+            //     const newFeedWithId = {
+            //       ...feed,
+            //       id: feedId,
+            //     };
+
+            //     const newPostsWithId = posts.map((post) => ({
+            //       ...post,
+            //       id: _.uniqueId(),
+            //       feedId,
+            //     }));
+
+            //     watchedState.feeds.push(newFeedWithId);
+            //     watchedState.posts.postsList.push(...newPostsWithId);
+            //     watchedState.rssForm.state = 'completed';
+            //   })
+            //   .catch((error) => {
+            //     if (error.isParsingError) {
+            //       watchedState.rssForm.error = i18nInstance.t('network.errors.invalidRss');
+            //     } else {
+            //       watchedState.rssForm.error = i18nInstance.t('network.errors.connectionError');
+            //     }
+            //     watchedState.rssForm.state = 'error';
+            //   });
+          // })
+          // .catch((error) => {
+            // watchedState.rssForm.error = error.errors;
+            // watchedState.rssForm.state = 'error';
+          // });
         startTimeout(state, watchedState, i18nInstance);
       });
 
