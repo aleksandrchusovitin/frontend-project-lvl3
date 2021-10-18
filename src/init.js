@@ -27,6 +27,10 @@ const startTimeout = (state, watchedState, i18nInstance) => {
   }, 5000);
 };
 
+const validate = (url, links) => {
+
+};
+
 const getValidateUrlShema = (state) => {
   const urls = state.feeds.map((feed) => feed.url);
 
@@ -86,7 +90,7 @@ export default () => {
         watchedState.rssForm.url = currentUrl;
         watchedState.rssForm.state = 'loading';
 
-        getValidateUrlShema(i18nInstance, state)
+        getValidateUrlShema(state)
           .validate(state.rssForm.url)
           .then(() => {
             watchedState.rssForm.error = null;
