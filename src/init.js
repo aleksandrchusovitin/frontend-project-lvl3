@@ -27,9 +27,9 @@ const startTimeout = (state, watchedState, i18nInstance) => {
   }, 5000);
 };
 
-const validate = (url, links) => {
+// const validate = (url, links) => {
 
-};
+// };
 
 const getValidateUrlShema = (state) => {
   const urls = state.feeds.map((feed) => feed.url);
