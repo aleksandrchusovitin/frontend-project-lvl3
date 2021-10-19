@@ -3,13 +3,13 @@ import i18n from 'i18next';
 import _ from 'lodash';
 import resources from './locales/index.js';
 import getWatchedState from './view.js';
-import getRequest from './getRequest.js';
+import getFeed from './getFeed.js';
 import parser from './parser.js';
 import loadFeed from './loadFeed.js';
 
 const updatePosts = (state, watchedState, i18nInstance) => {
   setTimeout(() => {
-    const requests = state.feeds.map((feed) => getRequest(feed.url));
+    const requests = state.feeds.map((feed) => getFeed(feed.url));
     Promise.all(requests)
       .then((data) => {
         data.forEach((feed) => {
@@ -40,6 +40,14 @@ const detectErrorType = (error) => {
 
   if (error.isAxiosError) {
     return 'connectionError';
+  }
+
+  if (error.isIncorrectUrl) {
+    return 'incorrectUrl';
+  }
+
+  if (error.dublicateUrl) {
+    return 'dublicateUrl';
   }
 
   return 'unknownErrorType';
@@ -82,10 +90,10 @@ export default () => {
     .then(() => {
       yup.setLocale({
         string: {
-          url: i18nInstance.t('validation.errors.incorrectUrl'),
+          url: i18nInstance.t('incorrectUrl'),
         },
         mixed: {
-          notOneOf: i18nInstance.t('validation.errors.dublicateUrl'),
+          notOneOf: i18nInstance.t('dublicateUrl'),
         },
       });
 
@@ -100,10 +108,11 @@ export default () => {
           validate(currentUrl, state.feeds.map((item) => item.url));
           watchedState.rssForm.url = currentUrl;
           watchedState.rssForm.state = 'loading';
-          // watchedState.rssForm.error = null;
+          watchedState.rssForm.error = null;
 
           loadFeed(currentUrl)
             .then(({ feed, posts }) => {
+              console.log('THEN');
               const feedId = _.uniqueId();
 
               const newFeedWithId = {
@@ -122,15 +131,9 @@ export default () => {
               watchedState.rssForm.state = 'completed';
             })
             .catch((error) => {
+              console.log('CATCH');
               watchedState.rssForm.error = detectErrorType(error);
               watchedState.rssForm.state = 'error';
-              // console.dir(error);
-              // if (error.isParsingError) {
-              //   watchedState.rssForm.error = i18nInstance.t('network.errors.invalidRss');
-              // } else {
-              //   watchedState.rssForm.error = i18nInstance.t('network.errors.connectionError');
-              // }
-              // watchedState.rssForm.state = 'error';
             });
         } catch (error) {
           watchedState.rssForm.error = error.message;

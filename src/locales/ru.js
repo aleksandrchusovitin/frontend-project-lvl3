@@ -10,19 +10,27 @@ export default {
       feeds: 'Фиды',
       posts: 'Посты',
     },
-    validation: {
-      errors: {
-        incorrectUrl: 'Ссылка должна быть валидным URL',
-        dublicateUrl: 'RSS уже существует',
-        unknownErrorType: 'Неизвестная ошибка',
-      },
-    },
-    network: {
-      errors: {
-        connectionError: 'Ошибка сети',
-        invalidRss: 'Ресурс не содержит валидный RSS',
-      },
+    feedbackMessages: {
+      incorrectUrl: 'Ссылка должна быть валидным URL',
+      dublicateUrl: 'RSS уже существует',
+      connectionError: 'Ошибка сети',
+      invalidRss: 'Ресурс не содержит валидный RSS',
+      unknownErrorType: 'Неизвестная ошибка',
       success: 'RSS успешно загружен',
     },
+    // validation: {
+    //   errors: {
+    //     incorrectUrl: 'Ссылка должна быть валидным URL',
+    //     dublicateUrl: 'RSS уже существует',
+    //   },
+    // },
+    // network: {
+    //   errors: {
+    //     connectionError: 'Ошибка сети',
+    //     invalidRss: 'Ресурс не содержит валидный RSS',
+    //     unknownErrorType: 'Неизвестная ошибка',
+    //   },
+    //   success: 'RSS успешно загружен',
+    // },
   },
 };
