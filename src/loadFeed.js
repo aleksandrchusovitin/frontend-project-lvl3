@@ -1,4 +1,4 @@
-import getRequest from './getRequest.js';
+import getFeed from './getFeed.js';
 import parser from './parser.js';
 
-export default (currentUrl) => getRequest(currentUrl).then((data) => parser(currentUrl, data));
+export default (link) => getFeed(link).then((data) => parser(link, data));
