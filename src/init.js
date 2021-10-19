@@ -33,6 +33,18 @@ const validate = (url, links) => {
   shema.validateSync(url);
 };
 
+const detectErrorType = (error) => {
+  if (error.isParsingError) {
+    return 'invalidRss';
+  }
+
+  if (error.isAxiosError) {
+    return 'connectionError';
+  }
+
+  return 'unknownErrorType';
+};
+
 export default () => {
   const elements = {
     rssForm: document.querySelector('.rss-form'),
@@ -88,7 +100,7 @@ export default () => {
           validate(currentUrl, state.feeds.map((item) => item.url));
           watchedState.rssForm.url = currentUrl;
           watchedState.rssForm.state = 'loading';
-          watchedState.rssForm.error = null;
+          // watchedState.rssForm.error = null;
 
           loadFeed(currentUrl)
             .then(({ feed, posts }) => {
@@ -110,12 +122,15 @@ export default () => {
               watchedState.rssForm.state = 'completed';
             })
             .catch((error) => {
-              if (error.isParsingError) {
-                watchedState.rssForm.error = i18nInstance.t('network.errors.invalidRss');
-              } else {
-                watchedState.rssForm.error = i18nInstance.t('network.errors.connectionError');
-              }
+              watchedState.rssForm.error = detectErrorType(error);
               watchedState.rssForm.state = 'error';
+              // console.dir(error);
+              // if (error.isParsingError) {
+              //   watchedState.rssForm.error = i18nInstance.t('network.errors.invalidRss');
+              // } else {
+              //   watchedState.rssForm.error = i18nInstance.t('network.errors.connectionError');
+              // }
+              // watchedState.rssForm.state = 'error';
             });
         } catch (error) {
           watchedState.rssForm.error = error.message;

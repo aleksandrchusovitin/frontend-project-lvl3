@@ -14,6 +14,7 @@ export default {
       errors: {
         incorrectUrl: 'Ссылка должна быть валидным URL',
         dublicateUrl: 'RSS уже существует',
+        unknownErrorType: 'Неизвестная ошибка',
       },
     },
     network: {
