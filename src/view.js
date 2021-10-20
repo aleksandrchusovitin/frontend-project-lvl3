@@ -11,7 +11,7 @@ export default (state, elements, i18nInstance) => {
       if (currentValue === 'completed') {
         renderFeedback(elements, state, i18nInstance);
       }
-      renderForm(elements, currentValue, i18nInstance);
+      renderForm(elements, state);
     }
 
     if (path === 'rssForm.error') {

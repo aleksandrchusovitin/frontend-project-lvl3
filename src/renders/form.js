@@ -1,7 +1,7 @@
-export default (elements, process) => {
+export default (elements, state) => {
   const { rssForm } = elements;
 
-  const isBlockedForm = (process === 'loading');
+  const isBlockedForm = (state.rssForm.state === 'loading');
 
   const row = document.createElement('div');
   row.classList.add('row');
@@ -13,6 +13,9 @@ export default (elements, process) => {
   formFloating.classList.add('form-floating');
   const inputUrl = document.createElement('input');
   inputUrl.classList.add('form-control', 'w-100');
+  if (state.rssForm.error !== null) {
+    inputUrl.classList.add('is-invalid');
+  }
   inputUrl.setAttribute('id', 'url-input');
   inputUrl.setAttribute('name', 'url');
   inputUrl.setAttribute('aria-label', 'url');
