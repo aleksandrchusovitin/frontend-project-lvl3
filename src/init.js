@@ -101,6 +101,7 @@ export default () => {
         } catch (error) {
           watchedState.rssForm.error = error.message;
           watchedState.rssForm.state = 'error';
+          return;
         }
         watchedState.rssForm.url = currentUrl;
         watchedState.rssForm.state = 'loading';
