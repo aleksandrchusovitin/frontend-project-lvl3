@@ -9,20 +9,13 @@ export default (state, elements, i18nInstance) => {
   const watchedState = onChange(state, (path, currentValue) => {
     if (path === 'rssForm.state') {
       if (currentValue === 'completed') {
-        renderFeedback(elements, 'sucess', i18nInstance);
+        renderFeedback(elements, state, i18nInstance);
       }
       renderForm(elements, currentValue, i18nInstance);
     }
 
     if (path === 'rssForm.error') {
-      console.log('FORM ERROR');
-      console.log(state);
-
-      if (currentValue !== null) {
-        renderFeedback(elements, currentValue, false, i18nInstance);
-      } else {
-        renderFeedback(elements, i18nInstance);
-      }
+      renderFeedback(elements, state, i18nInstance);
     }
 
     if (path === 'feeds') {

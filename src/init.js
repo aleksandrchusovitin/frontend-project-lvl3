@@ -42,23 +42,15 @@ const detectErrorType = (error) => {
     return 'connectionError';
   }
 
-  if (error.isIncorrectUrl) {
-    return 'incorrectUrl';
-  }
-
-  if (error.dublicateUrl) {
-    return 'dublicateUrl';
-  }
-
   return 'unknownErrorType';
 };
 
 export default () => {
   const elements = {
+    feedbackContainer: document.querySelector('.feedback-container'),
     rssForm: document.querySelector('.rss-form'),
     urlInput: document.querySelector('input[aria-label="url"]'),
     rssBtn: document.querySelector('button[aria-label="add"]'),
-    feedbackEl: document.querySelector('p.feedback'),
     feedsContainer: document.querySelector('.feeds'),
     postsContainer: document.querySelector('.posts'),
     modalContainer: document.querySelector('.modal'),
@@ -90,10 +82,10 @@ export default () => {
     .then(() => {
       yup.setLocale({
         string: {
-          url: i18nInstance.t('incorrectUrl'),
+          url: 'incorrectUrl',
         },
         mixed: {
-          notOneOf: i18nInstance.t('dublicateUrl'),
+          notOneOf: 'dublicateUrl',
         },
       });
 
@@ -106,39 +98,36 @@ export default () => {
 
         try {
           validate(currentUrl, state.feeds.map((item) => item.url));
-          watchedState.rssForm.url = currentUrl;
-          watchedState.rssForm.state = 'loading';
-          watchedState.rssForm.error = null;
-
-          loadFeed(currentUrl)
-            .then(({ feed, posts }) => {
-              console.log('THEN');
-              const feedId = _.uniqueId();
-
-              const newFeedWithId = {
-                ...feed,
-                id: feedId,
-              };
-
-              const newPostsWithId = posts.map((post) => ({
-                ...post,
-                id: _.uniqueId(),
-                feedId,
-              }));
-
-              watchedState.feeds.push(newFeedWithId);
-              watchedState.posts.postsList.push(...newPostsWithId);
-              watchedState.rssForm.state = 'completed';
-            })
-            .catch((error) => {
-              console.log('CATCH');
-              watchedState.rssForm.error = detectErrorType(error);
-              watchedState.rssForm.state = 'error';
-            });
         } catch (error) {
           watchedState.rssForm.error = error.message;
           watchedState.rssForm.state = 'error';
         }
+        watchedState.rssForm.url = currentUrl;
+        watchedState.rssForm.state = 'loading';
+        watchedState.rssForm.error = null;
+
+        loadFeed(currentUrl)
+          .then(({ feed, posts }) => {
+            const feedId = _.uniqueId();
+            const newFeedWithId = {
+              ...feed,
+              id: feedId,
+            };
+
+            const newPostsWithId = posts.map((post) => ({
+              ...post,
+              id: _.uniqueId(),
+              feedId,
+            }));
+
+            watchedState.feeds.push(newFeedWithId);
+            watchedState.posts.postsList.push(...newPostsWithId);
+            watchedState.rssForm.state = 'completed';
+          })
+          .catch((error) => {
+            watchedState.rssForm.error = detectErrorType(error);
+            watchedState.rssForm.state = 'error';
+          });
         updatePosts(state, watchedState, i18nInstance);
       });
 
