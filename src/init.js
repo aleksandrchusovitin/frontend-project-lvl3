@@ -23,8 +23,8 @@ const updatePosts = (state, watchedState, i18nInstance) => {
           }));
           watchedState.posts.postsList.push(...newPostsWithId);
         });
+        updatePosts(state, watchedState, i18nInstance);
       });
-    updatePosts(state, watchedState, i18nInstance);
   }, 5000);
 };
 
