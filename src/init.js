@@ -7,13 +7,13 @@ import getFeed from './getFeed.js';
 import parser from './parser.js';
 import loadFeed from './loadFeed.js';
 
-const updatePosts = (state, watchedState, i18nInstance) => {
+const updatePosts = (state, watchedState) => {
   setTimeout(() => {
     const requests = state.feeds.map((feed) => getFeed(feed.url));
     Promise.all(requests)
       .then((data) => {
         data.forEach((feed) => {
-          const { posts } = parser(feed.url, feed, i18nInstance);
+          const { posts } = parser(feed.url, feed);
           const newPosts = _.differenceBy(posts, state.posts.postsList, 'link');
 
           const newPostsWithId = newPosts.map((newPost) => ({
@@ -23,7 +23,7 @@ const updatePosts = (state, watchedState, i18nInstance) => {
           }));
           watchedState.posts.postsList.push(...newPostsWithId);
         });
-        updatePosts(state, watchedState, i18nInstance);
+        updatePosts(state, watchedState);
       });
   }, 5000);
 };
@@ -129,7 +129,7 @@ export default () => {
             watchedState.rssForm.error = detectErrorType(error);
             watchedState.rssForm.state = 'error';
           });
-        updatePosts(state, watchedState, i18nInstance);
+        updatePosts(state, watchedState);
       });
 
       elements.postsContainer.addEventListener('click', (e) => {

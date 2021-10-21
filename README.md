@@ -17,7 +17,7 @@ RSS-лента новостей с автоматическим обновлен
 - MVC
 - i18next
 - Bootstrap
-- AJAX используя Axios
+- AJAX, используя Axios
 - События, манипуляции с DOM
 - Валидация, DOMParser
 - Деплой (<https://vercel.com>)
