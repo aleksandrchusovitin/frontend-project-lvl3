@@ -6,14 +6,10 @@ import getWatchedState from './view.js';
 import loadFeed from './loadFeed.js';
 import loadPosts from './loadPosts.js';
 
-const updatePosts = (state, watchedState) => {
+const updatePosts = (watchedState) => {
   const requestsTimeout = 5000;
   setTimeout(() => {
-    loadPosts(state)
-      .then((newPostsWithId) => {
-        watchedState.posts.postsList.push(...newPostsWithId.flat());
-        updatePosts(state, watchedState);
-      });
+    loadPosts(watchedState).then(() => updatePosts(watchedState));
   }, requestsTimeout);
 };
 
