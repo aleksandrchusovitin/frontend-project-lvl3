@@ -104,6 +104,7 @@ export default () => {
             const newFeedWithId = {
               ...feed,
               id: feedId,
+              url: currentUrl,
             };
 
             const newPostsWithId = posts.map((post) => ({
