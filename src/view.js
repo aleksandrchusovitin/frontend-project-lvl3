@@ -8,14 +8,10 @@ import renderForm from './renders/form.js';
 export default (state, elements, i18nInstance) => {
   const watchedState = onChange(state, (path, currentValue) => {
     if (path === 'rssForm.state') {
-      if (currentValue === 'completed') {
+      if (currentValue === 'completed' || currentValue === 'error') {
         renderFeedback(elements, state, i18nInstance);
       }
       renderForm(elements, state);
-    }
-
-    if (path === 'rssForm.error') {
-      renderFeedback(elements, state, i18nInstance);
     }
 
     if (path === 'feeds') {
