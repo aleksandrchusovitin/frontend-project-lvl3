@@ -4,28 +4,19 @@ import _ from 'lodash';
 import resources from './locales/index.js';
 import getWatchedState from './view.js';
 import getFeed from './getFeed.js';
-import parser from './parser.js';
 import loadFeed from './loadFeed.js';
+import loadPosts from './loadPosts.js';
 
 const updatePosts = (state, watchedState) => {
+  const requestsTimeout = 5000;
   setTimeout(() => {
     const requests = state.feeds.map((feed) => getFeed(feed.url));
-    Promise.all(requests)
-      .then((data) => {
-        data.forEach((feed) => {
-          const { posts } = parser(feed.url, feed);
-          const newPosts = _.differenceBy(posts, state.posts.postsList, 'link');
-
-          const newPostsWithId = newPosts.map((newPost) => ({
-            ...newPost,
-            id: _.uniqueId(),
-            feedId: feed.id,
-          }));
-          watchedState.posts.postsList.push(...newPostsWithId);
-        });
+    loadPosts(requests, state)
+      .then((newPostsWithId) => {
+        watchedState.posts.postsList.push(...newPostsWithId.flat());
         updatePosts(state, watchedState);
       });
-  }, 5000);
+  }, requestsTimeout);
 };
 
 const validate = (url, links) => {
