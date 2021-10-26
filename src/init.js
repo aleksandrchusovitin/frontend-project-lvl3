@@ -3,15 +3,13 @@ import i18n from 'i18next';
 import _ from 'lodash';
 import resources from './locales/index.js';
 import getWatchedState from './view.js';
-import getFeed from './getFeed.js';
 import loadFeed from './loadFeed.js';
 import loadPosts from './loadPosts.js';
 
 const updatePosts = (state, watchedState) => {
   const requestsTimeout = 5000;
   setTimeout(() => {
-    const requests = state.feeds.map((feed) => getFeed(feed.url));
-    loadPosts(requests, state)
+    loadPosts(state)
       .then((newPostsWithId) => {
         watchedState.posts.postsList.push(...newPostsWithId.flat());
         updatePosts(state, watchedState);
