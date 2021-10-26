@@ -89,6 +89,7 @@ export default () => {
 
         try {
           validate(currentUrl, state.feeds.map((item) => item.url));
+          watchedState.rssForm.error = null;
         } catch (error) {
           watchedState.rssForm.error = error.message;
           watchedState.rssForm.state = 'error';
@@ -96,7 +97,6 @@ export default () => {
         }
         watchedState.rssForm.url = currentUrl;
         watchedState.rssForm.state = 'loading';
-        watchedState.rssForm.error = null;
 
         loadFeed(currentUrl)
           .then(({ feed, posts }) => {
