@@ -115,8 +115,8 @@ export default () => {
             watchedState.rssForm.error = detectErrorType(error);
             watchedState.rssForm.state = 'error';
           });
-        updatePosts(state, watchedState);
       });
+      updatePosts(watchedState);
 
       elements.postsContainer.addEventListener('click', (e) => {
         const { target } = e;
