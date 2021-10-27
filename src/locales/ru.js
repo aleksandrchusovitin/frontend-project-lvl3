@@ -11,11 +11,13 @@ export default {
       posts: 'Посты',
     },
     feedbackMessages: {
-      incorrectUrl: 'Ссылка должна быть валидным URL',
-      dublicateUrl: 'RSS уже существует',
-      connectionError: 'Ошибка сети',
-      invalidRss: 'Ресурс не содержит валидный RSS',
-      unknownErrorType: 'Неизвестная ошибка',
+      errors: {
+        unknown: 'Неизвестная ошибка',
+        connection: 'Ошибка сети',
+        incorrectUrl: 'Ссылка должна быть валидным URL',
+        dublicateUrl: 'RSS уже существует',
+        invalidRss: 'Ресурс не содержит валидный RSS',
+      },
       success: 'RSS успешно загружен',
     },
   },

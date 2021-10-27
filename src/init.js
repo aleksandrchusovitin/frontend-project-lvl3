@@ -24,10 +24,10 @@ const detectErrorType = (error) => {
   }
 
   if (error.isAxiosError) {
-    return 'connectionError';
+    return 'connection';
   }
 
-  return 'unknownErrorType';
+  return 'unknown';
 };
 
 export default () => {

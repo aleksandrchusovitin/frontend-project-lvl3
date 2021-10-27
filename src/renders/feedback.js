@@ -10,7 +10,7 @@ export default (elements, state, i18nInstance) => {
   feedbackElement.classList.add('feedback', 'm-0', 'position-absolute', 'small');
   if (state.rssForm.error !== null) {
     feedbackElement.classList.add('text-danger');
-    feedbackElement.textContent = i18nInstance.t(`feedbackMessages.${state.rssForm.error}`);
+    feedbackElement.textContent = i18nInstance.t(`feedbackMessages.errors.${state.rssForm.error}`);
   } else {
     feedbackElement.classList.add('text-success');
     feedbackElement.textContent = i18nInstance.t('feedbackMessages.success');
