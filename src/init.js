@@ -9,7 +9,7 @@ import loadPosts from './loadPosts.js';
 const updatePosts = (watchedState) => {
   const requestsTimeout = 5000;
   setTimeout(() => {
-    loadPosts(watchedState).then(() => updatePosts(watchedState));
+    loadPosts(watchedState).finally(() => updatePosts(watchedState));
   }, requestsTimeout);
 };
 
