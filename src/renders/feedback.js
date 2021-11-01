@@ -4,7 +4,7 @@ export default (elements, state, i18nInstance) => {
   feedbackContainer.innerHTML = '';
   const exampleUrlElement = document.createElement('p');
   exampleUrlElement.classList.add('mt-2', 'mb-0', 'text-muted');
-  exampleUrlElement.textContent = 'Пример: https://ru.hexlet.io/lessons.rss';
+  exampleUrlElement.textContent = i18nInstance.t('rssExample');
 
   const feedbackElement = document.createElement('p');
   feedbackElement.classList.add('feedback', 'm-0', 'position-absolute', 'small');

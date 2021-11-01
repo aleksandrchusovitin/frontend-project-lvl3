@@ -1,5 +1,4 @@
-export default (response) => {
-  const content = response.data.contents;
+export default (content) => {
   const parser = new DOMParser();
   const doc = parser.parseFromString(content, 'application/xml');
 

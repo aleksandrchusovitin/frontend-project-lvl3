@@ -10,6 +10,7 @@ export default {
       feeds: 'Фиды',
       posts: 'Посты',
     },
+    rssExample: 'Пример: https://ru.hexlet.io/lessons.rss',
     feedbackMessages: {
       errors: {
         unknown: 'Неизвестная ошибка',
